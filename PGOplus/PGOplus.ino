@@ -5,18 +5,18 @@ Andrés Sabas @ Electronic Cats an The Inventor's House
 Original Creation Date: Jal 19, 2016
 https://hackaday.io/project/12680-pokemon-go-plus-diy
 
-This project is intended to collectively create a DIY 
+This project is intended to collectively create a DIY
 version of the famous device Nintendo Pokemon Go Plus
-with Arduino and BLE Breakout 
+with Arduino and BLE Breakout
 
 Development environment specifics:
   IDE: Arduino 1.6.8
   Hardware Platform:
   - Arduino Micro (Arduino UNO low memory)
-  - Bluefruit LE - Bluetooth Low Energy (BLE 4.0) - nRF8001 Breakout 
-  
-This code is beerware; if you see me (or any other Electronic Cats 
-member) at the local, and you've found our code helpful, 
+  - Bluefruit LE - Bluetooth Low Energy (BLE 4.0) - nRF8001 Breakout
+
+This code is beerware; if you see me (or any other Electronic Cats
+member) at the local, and you've found our code helpful,
 please buy us a round!
 
 Distributed as-is; no warranty is given.
@@ -76,9 +76,9 @@ void setup() {
   blePeripheral.setAdvertisedServiceUuid(CtrService.uuid());
   blePeripheral.setAdvertisedServiceUuid(CerService.uuid());
   blePeripheral.setAdvertisedServiceUuid(BatService.uuid());
-  
+
   // add service and characteristics FW_UPDATE_SERVICE
-  blePeripheral.addAttribute(FwService);  
+  blePeripheral.addAttribute(FwService);
   blePeripheral.addAttribute(FwUpdateRequest);
   blePeripheral.addAttribute(FwVersion);
 
@@ -100,17 +100,16 @@ void setup() {
   // begin initialization
   blePeripheral.begin();
 
-  Serial.println(F("BLE LED Switch Peripheral"));
+  Serial.println(F("Pokemon Go Plus!"));
 }
 
 void loop() {
-  // poll peripheral
 
   BLECentral central = blePeripheral.central();
 
   if (central) {
     // central connected to peripheral
-    Serial.print(F("Connected to central: "));
+    Serial.print(F("Connected to POG: "));
     Serial.println(central.address());
 
     while (central.connected()) {
@@ -119,7 +118,7 @@ void loop() {
     }
 
     // central disconnected
-    Serial.print(F("Disconnected from central: "));
+    Serial.print(F("Disconnected from POG: "));
     Serial.println(central.address());
   }
 }
