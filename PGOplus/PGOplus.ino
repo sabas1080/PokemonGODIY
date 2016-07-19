@@ -26,20 +26,22 @@ Distributed as-is; no warranty is given.
 #include <BLEPeripheral.h>
 
 // define pins (varies per shield/board)
-#define BLE_REQ     10
+#define BLE_REQ     12
 #define BLE_RDY     2
-#define BLE_RST     9
+#define BLE_RST     8
 
 // LED and button pin
-#define LED_PIN     3
+#define LED_R     9
+#define LED_G     10
+#define LED_B     11
 #define BUTTON_PIN  4
 
 // create peripheral instance, see pinouts above
-BLEPeripheral            blePeripheral        = BLEPeripheral(BLE_REQ, BLE_RDY, BLE_RST);
+BLEPeripheral            blePeripheral       = BLEPeripheral(BLE_REQ, BLE_RDY, BLE_RST);
 
 // create service
 BLEService               FwService           = BLEService("0000fef5000010008000-00805f9b34fb");
-BLEService               CtrService           = BLEService("21c5046267cb63a35c4c82b5b9939aeb");
+BLEService               CtrService          = BLEService("21c5046267cb63a35c4c82b5b9939aeb");
 BLEService               CerService          = BLEService("bbe877095b894433ab7f8b8eef0d8e37");
 BLEService               BatService          = BLEService("0000180f00001000800000805f9b34fb");
 
@@ -64,14 +66,17 @@ void setup() {
 #if defined (__AVR_ATmega32U4__)
   delay(5000);  //5 seconds delay for enabling to see the start up comments on the serial board
 #endif
-
-  // set LED pin to output mode, button pin to input mode
-  pinMode(LED_PIN, OUTPUT);
+  
+  // set LEDs RGB pines to output mode
+  pinMode(LED_R, OUTPUT);
+  pinMode(LED_G, OUTPUT);
+  pinMode(LED_B, OUTPUT);
+  //Set button pin to input mode
   pinMode(BUTTON_PIN, INPUT);
 
   // set advertised local name and service UUID
   blePeripheral.setLocalName("EBISU"); // or Pokemon GO Plus
-   blePeripheral.setDeviceName("EBISU");
+  blePeripheral.setDeviceName("EBISU");
   blePeripheral.setAdvertisedServiceUuid(FwService.uuid());
   blePeripheral.setAdvertisedServiceUuid(CtrService.uuid());
   blePeripheral.setAdvertisedServiceUuid(CerService.uuid());
