@@ -51,6 +51,8 @@ const PROGMEM  uint16_t cie1931_forward[]= {
 
 // create peripheral instance, see pinouts above
 BLEPeripheral            blePeripheral       = BLEPeripheral(BLE_REQ, BLE_RDY, BLE_RST);
+BLEBondStore             bleBondStore;
+
 
 // create service
 BLEService               FwService           = BLEService("0000fef5000010008000-00805f9b34fb");
@@ -86,8 +88,14 @@ void setup() {
   pinMode(LED_R, OUTPUT);
   pinMode(LED_G, OUTPUT);
   pinMode(LED_B, OUTPUT);
+  
   //Set button pin to input mode
   pinMode(BUTTON_PIN, INPUT);
+
+  // clears bond data on every boot
+  bleBondStore.clearData();
+
+  blePeripheral.setBondStore(bleBondStore);
 
   // set advertised local name and service UUID
   blePeripheral.setLocalName("EBISU"); // or Pokemon GO Plus
