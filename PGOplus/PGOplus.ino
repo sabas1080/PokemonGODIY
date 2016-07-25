@@ -24,6 +24,7 @@ Distributed as-is; no warranty is given.
 // Import libraries (BLEPeripheral depends on SPI)
 #include <SPI.h>
 #include <BLEPeripheral.h>
+#include <avr/pgmspace.h>
 
 // define pins (varies per shield/board)
 #define BLE_REQ     12
@@ -35,6 +36,18 @@ Distributed as-is; no warranty is given.
 #define LED_G     10
 #define LED_B     11
 #define BUTTON_PIN  4
+
+// Pin Battery
+#define VBATPIN A1
+
+
+const PROGMEM  uint16_t cie1931_forward[]= {
+        //CIE 1931 specifies the transform in fixed-precision
+        0.49000, 0.31000, 0.20000,
+        0.17697, 0.81240, 0.01063,
+        0.00000, 0.01000, 0.99000
+};
+
 
 // create peripheral instance, see pinouts above
 BLEPeripheral            blePeripheral       = BLEPeripheral(BLE_REQ, BLE_RDY, BLE_RST);
@@ -59,7 +72,9 @@ BLECharCharacteristic    CentralToSfida = BLECharCharacteristic("bbe877095b89443
 BLECharCharacteristic    SfidaToCentral = BLECharCharacteristic("bbe877095b894433ab7f8b8eef0d8e3ac", BLERead | BLEWrite);
 
 // create BATTERY_SERVICE characteristic
-BLECharCharacteristic    BatLevel = BLECharCharacteristic("00002a1900001000800000805f9b34fb", BLERead | BLEWrite);
+BLECharCharacteristic    BatLevel = BLECharCharacteristic("00002a1900001000800000805f9b34fb", BLERead);
+
+int oldBatteryLevel = 0;  // last battery level reading from analog input
 
 void setup() {
   Serial.begin(115200);
@@ -102,6 +117,10 @@ void setup() {
   blePeripheral.addAttribute(BatService);
   blePeripheral.addAttribute(BatLevel);
 
+  
+  blePeripheral.setEventHandler(BLEConnected, blePeripheralConnectHandler);
+  blePeripheral.setEventHandler(BLEDisconnected, blePeripheralDisconnectHandler);
+  
   // begin initialization
   blePeripheral.begin();
 
@@ -109,21 +128,38 @@ void setup() {
 }
 
 void loop() {
+  
+  blePeripheral.poll();
 
-  BLECentral central = blePeripheral.central();
+  updateBatteryLevel();
+ 
+}
 
-  if (central) {
-    // central connected to peripheral
-    Serial.print(F("Connected to POG: "));
-    Serial.println(central.address());
+void blePeripheralConnectHandler(BLECentral& central) {
+  Serial.print(F("Connected event, POG: "));
+  Serial.println(central.address());
+}
 
-    while (central.connected()) {
-      // central still connected to peripheral
+void blePeripheralDisconnectHandler(BLECentral& central) {
+  Serial.print(F("Disconnected event, POG: "));
+  Serial.println(central.address());
+}
 
-    }
-
-    // central disconnected
-    Serial.print(F("Disconnected from POG: "));
-    Serial.println(central.address());
+void updateBatteryLevel() {
+  /* Read the current voltage level on the A1 analog input pin.
+     This is used here to simulate the charge level of a battery 3.7v.
+     NOTE: Consider the voltage of your battery 
+  */
+  int battery = analogRead(VBATPIN);
+  battery *= 2;    // we divided by 2, so multiply back
+  battery *= 3.3;  // Multiply by 3.3V, our reference voltage
+  int batteryLevel = map(battery, 0, 1023, 0, 100);
+  
+  if((abs(batteryLevel - oldBatteryLevel) >= 1)){ //if the battery level has change >= 1%
+  //if (batteryLevel != oldBatteryLevel) {      // if the battery level has changed
+    Serial.print("Battery Level % is now: "); // print it
+    Serial.println(batteryLevel);
+    BatLevel.setValue(batteryLevel);  // and update the battery level characteristic
+    oldBatteryLevel = batteryLevel;           // save the level for next comparison
   }
 }
