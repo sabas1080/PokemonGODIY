@@ -5,7 +5,7 @@ with Arduino and BLE breakout
 
 
 
-This project is currently development for more info: (https://hackaday.io/project/12680-pokemon-go-plus-diy)[https://hackaday.io/project/12680-pokemon-go-plus-diy]
+This project is currently development for more info: https://hackaday.io/project/12680-pokemon-go-plus-diy
 
 ## License
 
