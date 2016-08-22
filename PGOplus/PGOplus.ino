@@ -14,6 +14,7 @@ Development environment specifics:
   Hardware Platform:
   - Arduino Micro (Arduino UNO low memory)
   - Bluefruit LE - Bluetooth Low Energy (BLE 4.0) - nRF8001 Breakout
+  - Or nRF51822 with Arduino Core
 
 This code is beerware; if you see me (or any other Electronic Cats
 member) at the local, and you've found our code helpful,
@@ -24,12 +25,18 @@ Distributed as-is; no warranty is given.
 // Import libraries (BLEPeripheral depends on SPI)
 #include <SPI.h>
 #include <BLEPeripheral.h>
-#include <avr/pgmspace.h>
 
 // define pins (varies per shield/board)
+/*
 #define BLE_REQ     12
 #define BLE_RDY     2
 #define BLE_RST     8
+*/
+
+// define pins for nRF5
+#define BLE_REQ     -1
+#define BLE_RDY     -1
+#define BLE_RST     -1
 
 // LED and button pin
 #define LED_R     9
@@ -39,15 +46,6 @@ Distributed as-is; no warranty is given.
 
 // Pin Battery
 #define VBATPIN A1
-
-
-const PROGMEM  uint16_t cie1931_forward[]= {
-        //CIE 1931 specifies the transform in fixed-precision
-        0.49000, 0.31000, 0.20000,
-        0.17697, 0.81240, 0.01063,
-        0.00000, 0.01000, 0.99000
-};
-
 
 // create peripheral instance, see pinouts above
 BLEPeripheral            blePeripheral       = BLEPeripheral(BLE_REQ, BLE_RDY, BLE_RST);
@@ -98,8 +96,8 @@ void setup() {
   blePeripheral.setBondStore(bleBondStore);
 
   // set advertised local name and service UUID
-  blePeripheral.setLocalName("EBISU"); // or Pokemon GO Plus
-  blePeripheral.setDeviceName("EBISU");
+  blePeripheral.setLocalName("Pokemon GO Plus"); // or Pokemon GO Plus
+  blePeripheral.setDeviceName("Pokemon GO Plus");
   blePeripheral.setAdvertisedServiceUuid(FwService.uuid());
   blePeripheral.setAdvertisedServiceUuid(CtrService.uuid());
   blePeripheral.setAdvertisedServiceUuid(CerService.uuid());
