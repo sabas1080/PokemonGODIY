@@ -67,7 +67,7 @@ BLECharCharacteristic    LedVibrateCtrl  = BLECharCharacteristic("21c5046267cb63
 BLECharCharacteristic    ButtonNotif = BLECharCharacteristic("21c5046267cb63a35c4c82b5b9939aed", BLERead | BLENotify);
 
 // create CERTIFICATE_SERVICE characteristic
-BLECharCharacteristic    SfidaCommands = BLECharCharacteristic("bbe877095b894433ab7f8b8eef0d8e39", BLERead | BLEWrite);
+BLECharCharacteristic    SfidaCommands = BLECharCharacteristic("bbe877095b894433ab7f8b8eef0d8e39", BLERead | BLEWrite | BLENotify);
 BLECharCharacteristic    CentralToSfida = BLECharCharacteristic("bbe877095b894433ab7f8b8eef0d8e38", BLERead | BLEWrite);
 BLECharCharacteristic    SfidaToCentral = BLECharCharacteristic("bbe877095b894433ab7f8b8eef0d8e3ac", BLERead | BLEWrite);
 
