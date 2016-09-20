@@ -69,7 +69,7 @@ BLECharCharacteristic    ButtonNotif = BLECharCharacteristic("21c5046267cb63a35c
 // create CERTIFICATE_SERVICE characteristic
 BLECharCharacteristic    SfidaCommands = BLECharCharacteristic("bbe877095b894433ab7f8b8eef0d8e39", BLERead | BLEWrite | BLENotify);
 BLECharCharacteristic    CentralToSfida = BLECharCharacteristic("bbe877095b894433ab7f8b8eef0d8e38", BLERead | BLEWrite);
-BLECharCharacteristic    SfidaToCentral = BLECharCharacteristic("bbe877095b894433ab7f8b8eef0d8e3ac", BLERead | BLEWrite);
+BLECharCharacteristic    SfidaToCentral = BLECharCharacteristic("bbe877095b894433ab7f8b8eef0d8e3a", BLERead | BLEWrite);
 
 // create BATTERY_SERVICE characteristic
 BLECharCharacteristic    BatLevel = BLECharCharacteristic("00002a1900001000800000805f9b34fb", BLERead);
